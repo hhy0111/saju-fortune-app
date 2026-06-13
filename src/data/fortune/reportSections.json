@@ -1,0 +1,17 @@
+[
+  { "id": "corePersonality", "title": "나의 기본 기질", "locked": false },
+  { "id": "strength", "title": "나의 강점", "locked": false },
+  { "id": "weakness", "title": "나의 약점", "locked": true },
+  { "id": "publicImage", "title": "사람들에게 보이는 이미지", "locked": true },
+  { "id": "hiddenPersonality", "title": "혼자 있을 때의 성향", "locked": true },
+  { "id": "moneyStyle", "title": "돈을 대하는 방식", "locked": true },
+  { "id": "loveStyle", "title": "연애에서의 특징", "locked": true },
+  { "id": "workStyle", "title": "일할 때의 스타일", "locked": true },
+  { "id": "relationshipPattern", "title": "인간관계 패턴", "locked": true },
+  { "id": "todayFlow", "title": "오늘의 흐름", "locked": false },
+  { "id": "weeklyAdvice", "title": "이번 주 조언", "locked": true },
+  { "id": "warning", "title": "조심해야 할 말과 행동", "locked": true },
+  { "id": "luckyGuide", "title": "오늘의 행운 포인트", "locked": false },
+  { "id": "elementBalanceGuide", "title": "부족한 기운을 보완하는 방법", "locked": false },
+  { "id": "actionMission", "title": "나에게 맞는 하루 루틴", "locked": false }
+]

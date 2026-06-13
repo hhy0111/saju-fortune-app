@@ -1,0 +1,10 @@
+{
+  "colors": [
+    { "color": "금빛 아이보리", "colorHex": "#F6D58A" },
+    { "color": "깊은 남색", "colorHex": "#1E2A55" },
+    { "color": "부적의 붉은색", "colorHex": "#B9363F" },
+    { "color": "비취 초록", "colorHex": "#4EAA73" },
+    { "color": "맑은 물빛", "colorHex": "#4E88D9" }
+  ],
+  "directions": ["동쪽", "남쪽", "서쪽", "북쪽", "중앙"]
+}
