@@ -5,13 +5,22 @@ import { generateFortune } from '../../src/core/fortune/generateFortune';
 import { fortuneMenuItems } from '../../src/core/fortune/fortuneCategories';
 import type { FortuneCategory } from '../../src/core/fortune/fortuneCategories';
 import type { FortuneResult } from '../../src/core/fortune/types';
-import { getPremiumProducts } from '../../src/core/monetization/products';
+import { findPremiumProduct, getPremiumProducts } from '../../src/core/monetization/products';
 import { mockPurchaseProduct } from '../../src/core/monetization/mockPurchase';
 import type { PremiumEntitlement, PremiumProductId } from '../../src/core/monetization/types';
 import type { BirthInput, ElementKey } from '../../src/core/saju/types';
 import './styles.css';
 
-type ViewName = 'home' | 'input' | 'loading' | 'summary' | 'detail' | 'unlock' | 'collection' | 'privacy';
+type ViewName =
+  | 'home'
+  | 'input'
+  | 'loading'
+  | 'summary'
+  | 'detail'
+  | 'unlock'
+  | 'premiumContent'
+  | 'collection'
+  | 'privacy';
 
 const defaultInput: BirthInput = {
   birthDate: '1990-05-17',
@@ -58,9 +67,9 @@ function ElementOrb({ element, value }: { element: ElementKey; value?: number })
 function AdSlot({ label }: { label: string }) {
   return (
     <div className="ad-slot">
-      <strong>AD MOCK</strong>
+      <strong>광고 영역</strong>
       <span>{label}</span>
-      <small>실제 AdMob 연동 전 레이아웃 확인 영역</small>
+      <small>웹 미리보기에서는 광고 표시 영역만 확인합니다.</small>
     </div>
   );
 }
@@ -156,7 +165,9 @@ function App() {
   const [entitlements, setEntitlements] = useState<PremiumEntitlement[]>([]);
   const [busy, setBusy] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<FortuneCategory | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<PremiumProductId>('premium_monthly_report');
   const products = useMemo(() => getPremiumProducts(), []);
+  const selectedProduct = findPremiumProduct(selectedProductId);
   const dragScrollHandlers = useDragScroll();
 
   const openInput = (category: FortuneCategory | null = null) => {
@@ -187,8 +198,12 @@ function App() {
     setBusy(true);
     const result = await mockPurchaseProduct(productId);
     setBusy(false);
+    setSelectedProductId(productId);
     if (result.status === 'purchased' && !entitlements.includes(result.entitlement)) {
       setEntitlements([...entitlements, result.entitlement]);
+    }
+    if (result.status === 'purchased') {
+      setView('premiumContent');
     }
   };
 
@@ -372,7 +387,7 @@ function App() {
               {busy ? <img className="unlock-burst" src={assets.effects.goldBurst} alt="" /> : null}
               <div className="seal">封</div>
               <h2>광고 해금 영역</h2>
-              <p>mock 보상형 광고를 완료하면 오늘의 상세 리포트가 열립니다.</p>
+              <p>보상형 광고를 완료하면 오늘의 상세 리포트가 열립니다.</p>
               <button className="primary-button" disabled={busy} onClick={unlockByAd}>
                 {busy ? '처리 중...' : '광고 보고 오늘 리포트 해금'}
               </button>
@@ -387,13 +402,48 @@ function App() {
                   <p>{product.description}</p>
                   <div className="product-footer">
                     <strong>{owned ? '보유 중' : product.priceLabel}</strong>
-                    <button disabled={busy || owned} onClick={() => purchase(product.id)}>
-                      {owned ? '활성화됨' : 'mock 결제'}
+                    <button
+                      disabled={busy}
+                      onClick={() => {
+                        if (owned) {
+                          setSelectedProductId(product.id);
+                          setView('premiumContent');
+                          return;
+                        }
+
+                        purchase(product.id);
+                      }}>
+                      {owned ? '콘텐츠 보기' : '프리미엄 해금'}
                     </button>
                   </div>
                 </div>
               );
             })}
+          </section>
+        ) : null}
+
+        {view === 'premiumContent' ? (
+          <section className="screen premium-content-screen">
+            <Header title="프리미엄 콘텐츠" onBack={() => setView('unlock')} sticky />
+            <div className="card product-content-card">
+              <p className="eyebrow">구매 완료</p>
+              <h2>{selectedProduct.title}</h2>
+              <p>{selectedProduct.description}</p>
+              <div className="include-list">
+                {selectedProduct.includes.map(item => (
+                  <span key={item}>• {item}</span>
+                ))}
+              </div>
+            </div>
+            {selectedProduct.contentSections.map(section => (
+              <article key={section.title} className="report-section">
+                <h3>{section.title}</h3>
+                <p>{section.body}</p>
+              </article>
+            ))}
+            <button className="primary-button" onClick={() => setView(fortune ? 'detail' : 'home')}>
+              {fortune ? '오늘 상세 리포트로 돌아가기' : '홈으로 돌아가기'}
+            </button>
           </section>
         ) : null}
 
@@ -449,7 +499,7 @@ function App() {
             />
             <PrivacySection
               title="문의"
-              body="개인정보 처리와 관련한 문의는 support@app101.local 로 연락해 주세요. 실제 출시 전에는 운영 가능한 이메일 주소로 교체됩니다."
+              body="개인정보 처리와 관련한 문의는 young02hwi@gmail.com 로 연락해 주세요."
             />
           </section>
         ) : null}

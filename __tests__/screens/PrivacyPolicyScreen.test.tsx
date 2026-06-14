@@ -23,5 +23,8 @@ describe('PrivacyPolicyScreen', () => {
     expect(text).toContain('기기 내 저장');
     expect(text).toContain('제3자 SDK');
     expect(text).toContain('문의');
+    expect(text).toContain('young02hwi@gmail.com');
+    expect(text).not.toContain('support@app101.local');
+    expect(text).not.toContain('출시 전');
   });
 });

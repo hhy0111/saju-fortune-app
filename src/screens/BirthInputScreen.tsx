@@ -85,6 +85,10 @@ export function BirthInputScreen({ navigation, route }: Props) {
     setCalendarMonth(current => new Date(current.getFullYear(), current.getMonth() + delta, 1));
   };
 
+  const moveCalendarYear = (delta: number) => {
+    setCalendarMonth(current => new Date(current.getFullYear() + delta, current.getMonth(), 1));
+  };
+
   const selectBirthDate = (date: Date) => {
     setBirthDate(formatIsoDate(date));
     setCalendarMonth(new Date(date.getFullYear(), date.getMonth(), 1));
@@ -236,6 +240,41 @@ export function BirthInputScreen({ navigation, route }: Props) {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalPanel}>
             <Text style={styles.modalTitle}>생년월일 선택</Text>
+            <View style={styles.calendarYearControls}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="10년 전"
+                hitSlop={8}
+                onPress={() => moveCalendarYear(-10)}
+                style={({ pressed }) => [styles.yearJumpButton, pressed && styles.yearJumpButtonPressed]}>
+                <Text style={styles.yearJumpText}>-10년</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="1년 전"
+                hitSlop={8}
+                onPress={() => moveCalendarYear(-1)}
+                style={({ pressed }) => [styles.yearJumpButton, pressed && styles.yearJumpButtonPressed]}>
+                <Text style={styles.yearJumpText}>-1년</Text>
+              </Pressable>
+              <Text style={styles.yearJumpCurrent}>{calendarMonth.getFullYear()}년</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="1년 후"
+                hitSlop={8}
+                onPress={() => moveCalendarYear(1)}
+                style={({ pressed }) => [styles.yearJumpButton, pressed && styles.yearJumpButtonPressed]}>
+                <Text style={styles.yearJumpText}>+1년</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="10년 후"
+                hitSlop={8}
+                onPress={() => moveCalendarYear(10)}
+                style={({ pressed }) => [styles.yearJumpButton, pressed && styles.yearJumpButtonPressed]}>
+                <Text style={styles.yearJumpText}>+10년</Text>
+              </Pressable>
+            </View>
             <View style={styles.calendarHeader}>
               <Pressable
                 accessibilityRole="button"
@@ -482,6 +521,41 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textAlign: 'center',
     marginBottom: 12,
+  },
+  calendarYearControls: {
+    minHeight: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 6,
+    marginBottom: 8,
+  },
+  yearJumpButton: {
+    minWidth: 52,
+    minHeight: 36,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(240,197,107,0.34)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
+  yearJumpButtonPressed: {
+    opacity: 0.78,
+    transform: [{ scale: 0.98 }],
+  },
+  yearJumpText: {
+    color: '#F6D58A',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  yearJumpCurrent: {
+    minWidth: 58,
+    color: '#FFF0BC',
+    fontSize: 15,
+    fontWeight: '900',
+    textAlign: 'center',
   },
   calendarHeader: {
     flexDirection: 'row',

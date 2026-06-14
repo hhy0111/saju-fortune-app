@@ -69,6 +69,26 @@ describe('web preview source', () => {
     expect(privacySource).toContain('rel="icon"');
     expect(privacySource).toContain('서버로 전송하지 않습니다');
     expect(privacySource).toContain('Google AdMob');
-    expect(privacySource).toContain('support@app101.local');
+    expect(privacySource).toContain('young02hwi@gmail.com');
+    expect(privacySource).not.toContain('support@app101.local');
+    expect(privacySource).not.toContain('출시 전');
+  });
+
+  it('does not expose development-only labels in the web preview', () => {
+    const mainSource = fs.readFileSync(path.join(process.cwd(), 'web/src/main.tsx'), 'utf8');
+
+    expect(mainSource).not.toContain('AD MOCK');
+    expect(mainSource).not.toContain('mock 결제');
+    expect(mainSource).not.toContain('support@app101.local');
+  });
+
+  it('moves from web preview purchase completion into premium content', () => {
+    const mainSource = fs.readFileSync(path.join(process.cwd(), 'web/src/main.tsx'), 'utf8');
+
+    expect(mainSource).toContain("'premiumContent'");
+    expect(mainSource).toContain('setSelectedProductId(productId)');
+    expect(mainSource).toContain("setView('premiumContent')");
+    expect(mainSource).toContain('selectedProduct.contentSections.map');
+    expect(mainSource).toContain('콘텐츠 보기');
   });
 });

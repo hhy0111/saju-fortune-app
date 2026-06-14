@@ -18,9 +18,16 @@ export interface PremiumProduct {
   storeProductId: string;
   title: string;
   description: string;
+  includes: string[];
+  contentSections: PremiumContentSection[];
   priceLabel: string;
   entitlement: PremiumEntitlement;
   badge?: string;
+}
+
+export interface PremiumContentSection {
+  title: string;
+  body: string;
 }
 
 export type PurchaseStatus = 'idle' | 'purchased' | 'cancelled' | 'failed';

@@ -96,6 +96,7 @@ jest.mock('react-native-iap', () => {
   return {
     initConnection: jest.fn(() => Promise.resolve(true)),
     fetchProducts: jest.fn(() => Promise.resolve([])),
+    getAvailablePurchases: jest.fn(() => Promise.resolve([])),
     finishTransaction: jest.fn(() => Promise.resolve()),
     purchaseUpdatedListener: jest.fn(() => subscription),
     purchaseErrorListener: jest.fn(() => subscription),

@@ -9,6 +9,7 @@ interface PremiumProductCardProps {
   owned: boolean;
   purchasing: boolean;
   onPurchase: () => void;
+  onOpenContent?: () => void;
 }
 
 export function PremiumProductCard({
@@ -17,7 +18,10 @@ export function PremiumProductCard({
   owned,
   purchasing,
   onPurchase,
+  onOpenContent,
 }: PremiumProductCardProps) {
+  const buttonLabel = owned ? '콘텐츠 보기' : purchasing ? '결제 중...' : '결제하기';
+
   return (
     <View style={[styles.card, owned && styles.owned]}>
       <View style={styles.header}>
@@ -25,15 +29,21 @@ export function PremiumProductCard({
         {product.badge ? <Text style={styles.badge}>{product.badge}</Text> : null}
       </View>
       <Text style={styles.description}>{product.description}</Text>
+      <View style={styles.includeList}>
+        {product.includes.map(item => (
+          <Text key={item} style={styles.includeItem}>
+            • {item}
+          </Text>
+        ))}
+      </View>
       <View style={styles.footer}>
         <Text style={styles.price}>{owned ? '보유 중' : priceLabel ?? product.priceLabel}</Text>
         <GameButton
-          label={owned ? '활성화됨' : purchasing ? '결제 중...' : '결제하기'}
+          label={buttonLabel}
           variant={owned ? 'secondary' : 'primary'}
-          disabled={owned}
           busy={purchasing}
-          accessibilityHint={owned ? '이미 보유한 상품입니다.' : '스토어 결제 화면으로 이동합니다.'}
-          onPress={onPurchase}
+          accessibilityHint={owned ? '구매한 프리미엄 콘텐츠 화면으로 이동합니다.' : '스토어 결제 화면으로 이동합니다.'}
+          onPress={owned && onOpenContent ? onOpenContent : onPurchase}
           style={styles.button}
         />
       </View>
@@ -79,6 +89,15 @@ const styles = StyleSheet.create({
     color: '#D8C8A2',
     lineHeight: 20,
     marginVertical: 10,
+  },
+  includeList: {
+    gap: 4,
+    marginBottom: 12,
+  },
+  includeItem: {
+    color: '#F5E6C8',
+    fontSize: 13,
+    lineHeight: 18,
   },
   footer: {
     flexDirection: 'row',

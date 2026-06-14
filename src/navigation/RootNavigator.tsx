@@ -5,6 +5,7 @@ import { BirthInputScreen } from '../screens/BirthInputScreen';
 import { CollectionScreen } from '../screens/CollectionScreen';
 import { DetailReportScreen } from '../screens/DetailReportScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { PremiumContentScreen } from '../screens/PremiumContentScreen';
 import { PremiumUnlockScreen } from '../screens/PremiumUnlockScreen';
 import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { ResultSummaryScreen } from '../screens/ResultSummaryScreen';
@@ -30,6 +31,7 @@ export function RootNavigator() {
       />
       <Stack.Screen name="ResultSummary" component={ResultSummaryScreen} options={{ headerShown: false }} />
       <Stack.Screen name="DetailReport" component={DetailReportScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="PremiumContent" component={PremiumContentScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PremiumUnlock" component={PremiumUnlockScreen} options={{ title: '리포트 해금' }} />
       <Stack.Screen name="Collection" component={CollectionScreen} options={{ title: '행운 도감' }} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} options={{ title: '개인정보처리방침' }} />

@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { initializeMobileAds } from '../core/ads/mobileAds';
 import { RootNavigator } from '../navigation/RootNavigator';
+import { useMonetizationStore } from '../store/monetizationStore';
 
 const theme = {
   ...DefaultTheme,
@@ -18,9 +19,12 @@ const theme = {
 };
 
 export default function App() {
+  const loadSavedPurchases = useMonetizationStore(state => state.loadSavedPurchases);
+
   useEffect(() => {
+    loadSavedPurchases().catch(() => undefined);
     initializeMobileAds().catch(() => undefined);
-  }, []);
+  }, [loadSavedPurchases]);
 
   return (
     <GestureHandlerRootView style={styles.root}>

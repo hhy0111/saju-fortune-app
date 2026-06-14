@@ -11,6 +11,7 @@ const foregroundImages = [
   'src/assets/images/talismans/talisman_red.png',
   'src/assets/images/pillars/pillar_sealed.png',
   'src/assets/images/pillars/pillar_unsealed.png',
+  'src/assets/images/ui/ui_gold_panel.png',
 ];
 
 describe('foreground image assets', () => {

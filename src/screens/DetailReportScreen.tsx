@@ -59,7 +59,12 @@ export function DetailReportScreen({ navigation, route }: Props) {
           stickyHeaderIndices={[0]}
           contentContainerStyle={styles.container}>
           <StickyReportHeader onBack={navigation.goBack} />
-          <Text accessibilityRole="header" maxFontSizeMultiplier={1.25} style={styles.title}>
+          <Text
+            accessibilityRole="header"
+            adjustsFontSizeToFit
+            maxFontSizeMultiplier={1.25}
+            numberOfLines={2}
+            style={styles.title}>
             {fortune.summaryTitle}
           </Text>
           {fortune.sections.map(section => (
@@ -67,7 +72,7 @@ export function DetailReportScreen({ navigation, route }: Props) {
           ))}
           {!unlocked ? (
             <GameButton
-              label="오늘의 상세 풀이 해금"
+              label="오늘 상세 리포트 해금"
               accessibilityHint="광고 해금 또는 프리미엄 화면으로 이동합니다."
               onPress={() => navigation.navigate('PremiumUnlock', route.params)}
             />
@@ -132,9 +137,11 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#F7E7BB',
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 22,
+    lineHeight: 28,
     fontWeight: '900',
+    textAlign: 'center',
+    marginTop: 12,
     marginBottom: 14,
   },
   empty: {

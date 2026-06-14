@@ -41,7 +41,7 @@
 ## Task 3: Failing Web Privacy Tests
 
 - [ ] Extend `__tests__/web/webSource.test.ts` to assert that `web/privacy.html` exists.
-- [ ] Assert the file contains `운명전 개인정보처리방침`, `서버로 전송하지 않습니다`, `Google AdMob`, and `support@app101.local`.
+- [ ] Assert the file contains `운명전 개인정보처리방침`, `서버로 전송하지 않습니다`, `Google AdMob`, and `young02hwi@gmail.com`.
 - [ ] Run `npm test -- --runInBand __tests__/web/webSource.test.ts`.
 - [ ] Confirm the test fails because `web/privacy.html` does not exist yet.
 
@@ -57,5 +57,4 @@
 - [ ] Run `npm test -- --runInBand`.
 - [ ] Run `npx tsc --noEmit`.
 - [ ] Run `npm run web:build`.
-- [ ] Report remaining store-registration follow-ups: replace placeholder support email and host `dist/privacy.html` at an active HTTPS URL.
-
+- [x] Report remaining store-registration follow-ups: contact email is set to `young02hwi@gmail.com`; host `dist/privacy.html` at the active GitHub Pages HTTPS URL.

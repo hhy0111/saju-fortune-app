@@ -1,6 +1,7 @@
 import {
   fetchProducts,
   finishTransaction,
+  getAvailablePurchases,
   initConnection,
   purchaseErrorListener,
   purchaseUpdatedListener,
@@ -84,6 +85,10 @@ function isPurchaseForSku(purchase: Purchase, sku: string) {
   return purchase.productId === sku || purchase.ids?.includes(sku);
 }
 
+function findPremiumProductForPurchase(purchase: Purchase): PremiumProduct | null {
+  return getPremiumProducts().find(product => isPurchaseForSku(purchase, product.storeProductId)) ?? null;
+}
+
 function toPurchaseResult(productId: PremiumProductId, purchase: Purchase): PurchaseResult {
   const product = findPremiumProduct(productId);
 
@@ -94,6 +99,14 @@ function toPurchaseResult(productId: PremiumProductId, purchase: Purchase): Purc
     transactionId: purchase.transactionId,
     purchaseToken: purchase.purchaseToken,
   };
+}
+
+function toMockPurchaseResults(): PurchaseResult[] {
+  return getPremiumProducts().map(product => ({
+    status: 'purchased',
+    productId: product.id,
+    entitlement: product.entitlement,
+  }));
 }
 
 export function getStoreProductIds(): string[] {
@@ -156,6 +169,46 @@ export async function purchaseNativeProduct(
     }
 
     return toFailedPurchase(productId, error instanceof Error ? error.message : '결제를 시작하지 못했습니다.');
+  }
+}
+
+export async function restoreNativePremiumPurchases(
+  options: NativeIapOptions = {},
+): Promise<PurchaseResult[]> {
+  if (options.forceMock) {
+    return toMockPurchaseResults();
+  }
+
+  try {
+    await ensureIapConnection();
+    const purchases = await getAvailablePurchases({
+      includeSuspendedAndroid: false,
+      onlyIncludeActiveItemsIOS: true,
+    });
+    const restored: PurchaseResult[] = [];
+
+    for (const purchase of purchases) {
+      const product = findPremiumProductForPurchase(purchase);
+
+      if (!product || purchase.purchaseState === 'pending') {
+        continue;
+      }
+
+      try {
+        await finishTransaction({
+          purchase,
+          isConsumable: false,
+        });
+      } catch {
+        // If the store already acknowledged this purchase, still restore the local entitlement.
+      }
+
+      restored.push(toPurchaseResult(product.id, purchase));
+    }
+
+    return restored;
+  } catch {
+    return shouldUseDevelopmentFallback() ? toMockPurchaseResults() : [];
   }
 }
 

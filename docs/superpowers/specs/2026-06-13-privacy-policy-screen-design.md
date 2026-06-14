@@ -19,7 +19,7 @@ The screen uses the existing `MysticBackground`, `SafeAreaView`, and dark/gold v
 
 ## Web Design
 
-`web/privacy.html` is a static HTML page with the same policy content. Because Vite copies root public HTML files when building from the web root, the page remains easy to host as `/privacy.html` after `npm run web:build`. The HTML includes Korean language metadata, app name, effective date, contact placeholder, and all store-relevant sections.
+`web/privacy.html` is a static HTML page with the same policy content. Because Vite copies root public HTML files when building from the web root, the page remains easy to host as `/privacy.html` after `npm run web:build`. The HTML includes Korean language metadata, app name, effective date, the active contact email, and all store-relevant sections.
 
 ## Policy Content
 
@@ -33,11 +33,10 @@ The policy includes:
 - Network: no server API for fortune generation or birth information transfer
 - Third parties: Google AdMob and store billing/IAP SDKs may process advertising, purchase, device, diagnostic, or transaction data according to their own policies
 - Purpose: fortune calculation, report generation, ad unlock, purchase entitlement, app stability
-- Contact: `support@app101.local` until a production support address is assigned
+- Contact: `young02hwi@gmail.com`
 
 ## Testing
 
 - `__tests__/screens/HomeScreen.test.tsx` verifies the home screen exposes a privacy policy button.
 - `__tests__/screens/PrivacyPolicyScreen.test.tsx` verifies the native screen renders the main privacy sections.
 - `__tests__/web/webSource.test.ts` verifies `web/privacy.html` exists and contains the key registration statements.
-

@@ -1,6 +1,5 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { sajuImages } from '../assets/imageAssets';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface FortuneCardProps {
   title: string;
@@ -9,17 +8,15 @@ interface FortuneCardProps {
 
 export function FortuneCard({ title, children }: FortuneCardProps) {
   return (
-    <ImageBackground
+    <View
       accessibilityLabel={`${title} 카드`}
-      source={sajuImages.ui.goldPanel}
-      resizeMode="stretch"
       style={styles.card}>
       <View style={styles.corner} />
       <Text accessibilityRole="header" maxFontSizeMultiplier={1.3} style={styles.title}>
         {title}
       </Text>
       {children}
-    </ImageBackground>
+    </View>
   );
 }
 

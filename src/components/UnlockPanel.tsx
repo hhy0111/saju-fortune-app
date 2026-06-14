@@ -30,7 +30,7 @@ export function UnlockPanel({ loading, onUnlock }: UnlockPanelProps) {
       <Text style={styles.icon}>封</Text>
       <Text style={styles.title}>광고 해금 영역</Text>
       <Text style={styles.body}>
-        mock 보상형 광고를 완료하면 오늘의 상세 리포트 잠금 섹션이 열립니다.
+        보상형 광고를 끝까지 시청하면 오늘의 상세 리포트 잠금 섹션이 열립니다.
       </Text>
       <GameButton
         label={loading ? '해금 중...' : '광고 보고 오늘 리포트 해금'}

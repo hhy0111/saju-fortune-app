@@ -99,8 +99,8 @@ export function calculatePillars(input: BirthInput): SajuPillars {
   const hour = input.birthHour === null ? null : calculateHourPillar(day, input.birthHour);
   const calendarNote =
     input.calendarType === 'lunar'
-      ? '음력 날짜는 내부 변환 기준으로 계산되며, 절기 기준 세부 월주는 추후 정밀화될 수 있습니다.'
-      : 'MVP 계산은 양력 날짜 기준이며, 절기 기준 세부 월주는 추후 정밀화될 수 있습니다.';
+      ? '음력 날짜는 앱 내부 변환 기준으로 양력에 맞춰 계산했습니다.'
+      : '양력 날짜 기준으로 사주 기둥과 오늘의 흐름을 계산했습니다.';
   const timeNote =
     input.birthHour === null ? ' 태어난 시간을 모르는 경우 시주는 제외되어 정확도가 낮아질 수 있습니다.' : '';
 

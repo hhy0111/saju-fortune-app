@@ -118,7 +118,8 @@ select:focus-visible {
 .input-screen,
 .result-screen,
 .detail-screen,
-.unlock-screen {
+.unlock-screen,
+.premium-content-screen {
   background-image:
     linear-gradient(180deg, rgba(5, 8, 22, 0.2), rgba(5, 8, 22, 0.72)),
     url("/assets/images/backgrounds/bg_result_chamber.webp");
@@ -820,6 +821,30 @@ select {
 .product-card.owned {
   border-color: #4eaa73;
   background: rgba(78, 170, 115, 0.16);
+}
+
+.product-content-card h2 {
+  color: #f7e7bb;
+  font-size: 26px;
+  line-height: 1.22;
+  margin-bottom: 8px;
+}
+
+.product-content-card p {
+  color: #f5e6c8;
+  line-height: 1.6;
+}
+
+.include-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.include-list span {
+  color: #f6d58a;
+  font-size: 14px;
+  line-height: 1.35;
 }
 
 .product-footer {

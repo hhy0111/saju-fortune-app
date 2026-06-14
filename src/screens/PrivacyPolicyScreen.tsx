@@ -41,7 +41,7 @@ const sections = [
   {
     title: '문의',
     body:
-      '개인정보 처리와 관련한 문의는 support@app101.local 로 연락해 주세요. 실제 출시 전에는 운영 가능한 이메일 주소로 교체됩니다.',
+      '개인정보 처리와 관련한 문의는 young02hwi@gmail.com 로 연락해 주세요.',
   },
 ];
 

@@ -60,5 +60,11 @@ describe('DetailReportScreen app scrolling', () => {
         .findAllByType(Text)
         .some(node => node.props.children === '상세 리포트'),
     ).toBe(true);
+
+    const reportTitle = renderer!.root
+      .findAllByType(Text)
+      .find(node => node.props.children === useFortuneStore.getState().fortunesById[fortuneId].summaryTitle);
+    expect(reportTitle?.props.numberOfLines).toBe(2);
+    expect(reportTitle?.props.adjustsFontSizeToFit).toBe(true);
   });
 });

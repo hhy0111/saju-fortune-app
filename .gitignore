@@ -32,6 +32,8 @@ local.properties
 *.hprof
 .cxx/
 *.keystore
+*.jks
+keystore.properties
 !debug.keystore
 .kotlin/
 
@@ -74,6 +76,7 @@ yarn-error.log
 web/dist/
 dist/
 .playwright-cli/
+output/
 output/playwright/
 
 # Yarn

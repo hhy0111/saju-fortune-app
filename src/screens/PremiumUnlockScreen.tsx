@@ -3,6 +3,7 @@ import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdBannerSlot } from '../components/AdBannerSlot';
+import { GameButton } from '../components/GameButton';
 import { MysticBackground } from '../components/MysticBackground';
 import { PremiumProductCard } from '../components/PremiumProductCard';
 import { UnlockPanel } from '../components/UnlockPanel';
@@ -17,13 +18,22 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PremiumUnlock'>;
 
 export function PremiumUnlockScreen({ navigation, route }: Props) {
   const [adLoading, setAdLoading] = useState(false);
+  const [restoring, setRestoring] = useState(false);
   const [purchasingProductId, setPurchasingProductId] = useState<PremiumProductId | null>(null);
   const unlockFortune = useFortuneStore(state => state.unlockFortune);
   const loadProducts = useMonetizationStore(state => state.loadProducts);
   const purchaseProduct = useMonetizationStore(state => state.purchaseProduct);
+  const restorePurchases = useMonetizationStore(state => state.restorePurchases);
   const hasEntitlement = useMonetizationStore(state => state.hasEntitlement);
   const storeProducts = useMonetizationStore(state => state.storeProducts);
   const products = getPremiumProducts();
+
+  const openPremiumContent = (productId: PremiumProductId) => {
+    navigation.replace('PremiumContent', {
+      ...route.params,
+      productId,
+    });
+  };
 
   useEffect(() => {
     loadProducts().catch(() => undefined);
@@ -48,7 +58,7 @@ export function PremiumUnlockScreen({ navigation, route }: Props) {
   };
 
   const purchase = async (productId: PremiumProductId) => {
-    if (purchasingProductId) {
+    if (purchasingProductId || restoring) {
       return;
     }
 
@@ -57,48 +67,74 @@ export function PremiumUnlockScreen({ navigation, route }: Props) {
     setPurchasingProductId(null);
 
     if (result.status === 'purchased') {
-      Alert.alert('결제 완료', '프리미엄 권한이 활성화되었습니다.');
+      openPremiumContent(productId);
       return;
     }
 
     Alert.alert('결제 미완료', result.message ?? '결제가 완료되지 않았습니다.');
   };
 
+  const restore = async () => {
+    if (restoring || purchasingProductId) {
+      return;
+    }
+
+    setRestoring(true);
+    const results = await restorePurchases();
+    setRestoring(false);
+
+    if (results.length > 0) {
+      Alert.alert('구매 복원 완료', `${results.length}개 프리미엄 권한을 복원했습니다.`);
+      return;
+    }
+
+    Alert.alert('복원할 구매 없음', '현재 계정에서 복원할 프리미엄 구매를 찾지 못했습니다.');
+  };
+
   return (
     <MysticBackground variant="result">
       <SafeAreaView style={styles.safe}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-        overScrollMode="never"
-        showsVerticalScrollIndicator={false}>
-        <Text accessibilityRole="header" maxFontSizeMultiplier={1.25} style={styles.title}>
-          리포트 해금과 프리미엄
-        </Text>
-        <Text style={styles.subtitle}>
-          오늘의 상세 풀이는 광고로 열고, 월간/연간/궁합 같은 확장 리포트는 인앱 결제 영역에서
-          확인합니다.
-        </Text>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          overScrollMode="never"
+          showsVerticalScrollIndicator={false}>
+          <Text accessibilityRole="header" maxFontSizeMultiplier={1.25} style={styles.title}>
+            리포트 해금과 프리미엄
+          </Text>
+          <Text style={styles.subtitle}>
+            오늘의 상세 풀이는 광고로 열고, 월간/연간/궁합 같은 확장 리포트는 인앱 결제 상품으로 확인할 수 있습니다.
+          </Text>
 
-        <UnlockPanel loading={adLoading} onUnlock={unlockByAd} />
-        <AdBannerSlot placement="detail" />
+          <UnlockPanel loading={adLoading} onUnlock={unlockByAd} />
+          <AdBannerSlot placement="detail" />
 
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>프리미엄 상품 영역</Text>
-          <Text style={styles.sectionCaption}>스토어 상품 조회 후 결제 화면으로 이동합니다.</Text>
-        </View>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>프리미엄 상품</Text>
+            <Text style={styles.sectionCaption}>Google Play에 등록한 일회성 상품 ID와 앱 상품 ID가 같아야 합니다.</Text>
+          </View>
 
-        {products.map(product => (
-          <PremiumProductCard
-            key={product.id}
-            product={product}
-            priceLabel={storeProducts[product.id]?.localizedPrice}
-            owned={hasEntitlement(product.entitlement)}
-            purchasing={purchasingProductId === product.id}
-            onPurchase={() => purchase(product.id)}
+          {products.map(product => (
+            <PremiumProductCard
+              key={product.id}
+              product={product}
+              priceLabel={storeProducts[product.id]?.localizedPrice}
+              owned={hasEntitlement(product.entitlement)}
+              purchasing={purchasingProductId === product.id}
+              onPurchase={() => purchase(product.id)}
+              onOpenContent={() => openPremiumContent(product.id)}
+            />
+          ))}
+
+          <GameButton
+            label={restoring ? '구매 복원 중...' : '구매 복원'}
+            variant="secondary"
+            busy={restoring}
+            accessibilityHint="같은 Google Play 계정에서 이전에 구매한 프리미엄 권한을 복원합니다."
+            onPress={restore}
+            style={styles.restoreButton}
           />
-        ))}
-      </ScrollView>
+        </ScrollView>
       </SafeAreaView>
     </MysticBackground>
   );
@@ -140,5 +176,8 @@ const styles = StyleSheet.create({
     color: '#B9AD91',
     fontSize: 12,
     marginTop: 4,
+  },
+  restoreButton: {
+    marginTop: 6,
   },
 });

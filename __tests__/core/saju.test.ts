@@ -15,7 +15,9 @@ describe('saju calculation', () => {
     expect(pillars.month.branch).toBeTruthy();
     expect(pillars.day.stemHanja).toBeTruthy();
     expect(pillars.hour).not.toBeNull();
-    expect(pillars.accuracyNote).toContain('MVP');
+    expect(pillars.accuracyNote).toContain('양력 날짜 기준');
+    expect(pillars.accuracyNote).not.toContain('MVP');
+    expect(pillars.accuracyNote).not.toContain('추후');
   });
 
   it('keeps hour pillar null when birth time is unknown', () => {
@@ -41,6 +43,7 @@ describe('saju calculation', () => {
     });
 
     expect(pillars.accuracyNote).toContain('음력');
+    expect(pillars.accuracyNote).not.toContain('추후');
     expect(pillars.year.branch).toBeTruthy();
   });
 
